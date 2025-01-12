@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,32 +31,63 @@ public class Households {
             }
         }
 
+        // Prints out data of households in a formatted manner. 
         for (Map.Entry<String, List<Person>> entry: houses.entrySet()) {
             printFormatter(entry);
         }
         sc.close();
     }
 
-    
+    /*
+     * This method serves as a helper function given a line of data, will return a Person object. 
+     * Will catch if age entered is not a number. 
+     */
     private static Person createPerson(String line) {
-        String[] data = line.split(",");
-
-        String fName = trimString(data[0]);
-        String lName = trimString(data[1]);
-        String address = trimString(data[2]) + " " + trimString(data[3]) + " " + trimString(data[4]);
+        String[] data = formatData(line);
+        String fName = data[0];
+        String lName = data[1];
+        String address = data[2] + " " + data[3] + " " + data[4];
+        int age = -1;
+        try {
+            age = Integer.parseInt(data[5]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid data. Age needs to be a number. \n" +  e);
+        }
         
-        int age = Integer.parseInt(trimString(data[5]));
-
         Person person = new Person(fName, lName, address, age);
         return person;
     }
 
-    private static String trimString(String data) {
-        String res = data.substring(1, data.length() - 1);
+    /*
+     * This method given a line of data as described in the documents, 
+     * will return a String[] representation of the data.
+     */
+    private static String[] formatData(String data) {
+        String[] res = new String[6];
 
+        int resIdx = 0;
+        int left = 1;
+        int right = 1;
+        
+        // Finds data within quotation marks and adds to resulting String[]
+        while (right < data.length()) {
+            if (data.charAt(right) == '\"') {
+                res[resIdx] = data.substring(left, right);
+                left = right + 3;
+                right = right + 3;
+                resIdx++;
+            } else {
+                right++;
+            }
+        }
         return res;
     }
 
+    /*
+     * Helper function to output formatted data to console. 
+     * Given an entry, will print out each household as defined in the Output Format Example. 
+     */
+    
     private static void printFormatter(Map.Entry<String, List<Person>> entry) {
         System.out.println(entry.getKey().hashCode() + " " + entry.getValue().size());
         List<Person> currentList = entry.getValue();
@@ -73,8 +103,7 @@ public class Households {
 }
 
 /*
- * This class Person keeps track of an individuals data
- * Will 
+ * This class keeps track of an individuals data.
  */
 class Person implements Comparable<Person>{
     String fName;
@@ -82,6 +111,9 @@ class Person implements Comparable<Person>{
     String address;
     int age;
 
+    /* 
+     * Constructor for Person class. 
+     */
     public Person(String fName, String lName, String address, int age) {
         this.fName = fName;
         this.lName = lName;
@@ -97,23 +129,37 @@ class Person implements Comparable<Person>{
         return compare;
     }
 
-
+    /* 
+     * Returns address as String
+     */
     public String getAddress() {
         return address;
     }
 
+    /* 
+     * Returns age as Integer
+     */
     public int getAge() {
         return age;
     }
 
+    /* 
+     * Returns information about person in a formatted String. 
+     */
     public String getInfo() {
         return fName + " | " + lName + " | " + address + " | " + age;
     }
 
+    /* 
+     * Returns last name as String
+     */
     public String getLastName() {
         return lName;
     }
 
+    /* 
+     * Returns first name as String
+     */
     public String getFirstName() {
         return fName;
     }
