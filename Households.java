@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Households {
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception{
 
         String path = "data.txt";
         File file = new File(path);
@@ -51,7 +51,7 @@ public class Households {
         try {
             age = Integer.parseInt(data[5]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid data. Age needs to be a number. \n" +  e);
+            System.err.println("Invalid data. Age needs to be a number. \n" +  e);
         }
         
         Person person = new Person(fName, lName, address, age);
@@ -73,8 +73,8 @@ public class Households {
         while (right < data.length()) {
             if (data.charAt(right) == '\"') {
                 res[resIdx] = data.substring(left, right);
-                left = right + 3;
-                right = right + 3;
+                left = right + 3; // Move the left pointer 3 further than right pointer to be at the start of the next data entry. 
+                right = right + 3;// Moves the right pointer to the start of the next data entry. 
                 resIdx++;
             } else {
                 right++;
